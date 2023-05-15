@@ -4,7 +4,7 @@ resource "local_file" "atlantis" {
      hosts_control = "${yandex_compute_instance.cluster-k8s[0].network_interface.0.nat_ip_address}",
     }
   )
-  filename = "../atlantis/${terraform.workspace}-statefulset.yaml"
+  filename = "./atlantis/${terraform.workspace}-statefulset.yaml"
 
   depends_on = [
     null_resource.login-password4jenkins
@@ -38,7 +38,7 @@ resource "null_resource" "atlantis_secret" {
 
 resource "null_resource" "atlantis_apply" {
   provisioner "local-exec" {
-    command = "kubectl apply -f ../atlantis/"
+    command = "kubectl apply -f ./atlantis/"
   }
 
 

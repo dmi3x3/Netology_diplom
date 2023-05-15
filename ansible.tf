@@ -43,7 +43,7 @@ resource "null_resource" "kubectl-config" {
 
 resource "null_resource" "monitoring-setup" {
   provisioner "local-exec" {
-    command = "kubectl apply --server-side -f ../kube-prometheus/manifests/setup"
+    command = "kubectl apply --server-side -f ./kube-prometheus/manifests/setup"
   }
 
   depends_on = [
@@ -63,7 +63,7 @@ resource "null_resource" "monitoring-wait" {
 
 resource "null_resource" "monitoring" {
   provisioner "local-exec" {
-    command = "kubectl apply -f ../kube-prometheus/manifests/"
+    command = "kubectl apply -f ./kube-prometheus/manifests/"
   }
 
   depends_on = [
@@ -73,7 +73,7 @@ resource "null_resource" "monitoring" {
 
 resource "null_resource" "jenkins-ns" {
   provisioner "local-exec" {
-    command = "kubectl apply -f ../jenkins/jenkins-namespaces.yaml"
+    command = "kubectl apply -f ./jenkins/jenkins-namespaces.yaml"
   }
   depends_on = [
     null_resource.monitoring
@@ -83,7 +83,7 @@ resource "null_resource" "helm_install_app-web" {
   provisioner "local-exec" {
     command = <<EOF
       sleep 30
-      helm install app-web-repo ../app_web/app-web-chart --set image_frontend.tag=latest -n stage
+      helm install app-web-repo ./app_web/app-web-chart --set image_frontend.tag=latest -n stage
     EOF
   }
   depends_on = [
@@ -99,14 +99,14 @@ resource "null_resource" "install_jenkins-crd" {
     EOF
   }
   provisioner "local-exec" {
-    command    = "kubectl apply -n jenkins -f ../jenkins/all-in-one-v1alpha2.yaml"
+    command    = "kubectl apply -n jenkins -f ./jenkins/all-in-one-v1alpha2.yaml"
   }
   provisioner "local-exec" {
     command    = <<EOT
       sleep 30
       kubectl create -n jenkins secret generic dockercred --from-file=.dockerconfigjson=$HOME/docker-netology/.config.json --type=kubernetes.io/dockerconfigjson
-      kubectl apply -f ../jenkins/serviceaccount4stage_clusterrole.yaml
-      kubectl apply -n jenkins -f ../jenkins/jenkins-instance-jen.yaml
+      kubectl apply -f ./jenkins/serviceaccount4stage_clusterrole.yaml
+      kubectl apply -n jenkins -f ./jenkins/jenkins-instance-jen.yaml
     EOT
   }
     depends_on = [
