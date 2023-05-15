@@ -57,3 +57,8 @@ variable "gh_token" {
   type    = string
   default = null
 }
+
+variable "rev_request" {
+  type = string
+  default = 1
+}
