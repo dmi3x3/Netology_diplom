@@ -1,0 +1,31 @@
+[all]
+%{ for node in all_nodes ~}
+${node.name} ansible_host=${node.network_interface.0.nat_ip_address} ip=${node.network_interface.0.ip_address } %{if node.labels.index == "0"}etcd_member_name=etcd0%{endif} ansible_user=${nodes_user}
+%{ endfor ~}
+
+[kube_control_plane]
+%{ for node in all_nodes ~}
+%{if node.labels.index == "0"}${node.name}%{endif ~}
+%{ endfor}
+
+[etcd]
+%{ for node in all_nodes ~}
+%{if node.labels.index == "0"}${node.name}%{endif ~}
+%{ endfor}
+
+[kube_node]
+%{ for node in all_nodes ~}
+%{if node.labels.index != "0"}${node.name}%{endif}
+%{ endfor ~}
+
+[calico_rr]
+
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+calico_rr
+
+[kube_control_plane:vars]
+%{ for node in all_nodes ~}
+%{if node.labels.index == "0"}supplementary_addresses_in_ssl_keys = [ "${node.network_interface.0.nat_ip_address}" ]%{endif ~}
+%{ endfor ~}

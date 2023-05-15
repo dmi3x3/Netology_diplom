@@ -1,0 +1,7 @@
+repos:
+  - id: gitlab.com/dmi3x3/devops-diplom-yandexcloud
+    branch: /.*/
+    allowed_overrides:
+      [apply_requirements, workflow, delete_source_branch_on_merge]
+    allow_custom_workflows: true
+    delete_source_branch_on_merge: false

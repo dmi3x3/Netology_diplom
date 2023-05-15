@@ -1,0 +1,27 @@
+version: 3
+projects:
+  - dir: .
+    workspace: stage
+    autoplan:
+      when_modified: ["modules/**/*.tf", "terraform/*.tf", "*.tf"]
+    workflow: custom
+  - dir: .
+    workspace: prod
+    autoplan:
+      when_modified: ["modules/**/*.tf", "terraform/*.tf", "*.tf"]
+    workflow: custom
+workflows:
+  custom:
+    plan:
+      steps:
+        - run: echo "run plan"
+        - run: ln -sf /home/atlantis/key.json key.json
+        - init
+        - run: cp -f /home/atlantis/.auto.tfvars ./
+        - plan
+    apply:
+      steps:
+        - run: echo "run apply"
+        - run: cp -f /home/atlantis/.auto.tfvars ./
+        - plan
+        - apply

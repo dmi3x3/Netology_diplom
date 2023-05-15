@@ -1,0 +1,8 @@
+#cloud-config
+users:
+  - name: ndiplom
+    groups: sudo
+    shell: /bin/bash
+    sudo: ['ALL=(ALL) NOPASSWD:ALL']
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBNt8zob1cJ+VfXSAazo8l6WHCIgl+m+02iH88/F+vWk

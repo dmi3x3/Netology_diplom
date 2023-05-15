@@ -1,0 +1,27 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: atlantis
+spec:
+  # type: NodePort
+  type: ClusterIP
+  ports:
+    - name: atlantis
+      port: 4141
+      targetPort: 4141
+  selector:
+    app: atlantis
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: atlantis-public
+spec:
+  type: NodePort
+  ports:
+    - name: atlantis-public
+      port: 4141
+      nodePort: 30141
+  selector:
+    app: atlantis

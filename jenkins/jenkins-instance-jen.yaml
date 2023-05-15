@@ -1,0 +1,89 @@
+apiVersion: jenkins.io/v1alpha2
+kind: Jenkins
+metadata:
+  name: j-instance
+#namespace: jenkins
+spec:
+  configurationAsCode:
+    configurations: []
+    secret:
+      name: ""
+  groovyScripts:
+    configurations: []
+    secret:
+      name: ""
+  jenkinsAPISettings:
+    authorizationStrategy: createUser
+  master:
+    disableCSRFProtection: false
+    basePlugins:
+    - name: kubernetes
+      version: "3893.v73d36f3b_9103"
+    - name: workflow-job
+      version: "1284.v2fe8ed4573d4"
+    - name: workflow-aggregator
+      version: "2.6"
+    - name: git
+      version: "5.0.0"
+    - name: job-dsl
+      version: "1.81"
+    - name: configuration-as-code
+      version: "1569.vb_72405b_80249"
+    - name: kubernetes-credentials-provider
+      version: "1.209.v862c6e5fb_1ef"
+    plugins:
+#    - name: pipeline-groovy-lib
+#      version: "629.vb_5627b_ee2104"
+    - name: timestamper
+      version: "1.22"
+#    - name: mask-passwords
+#      version: "150.vf80d33113e80"
+    containers:
+      - name: jenkins-master
+        image: jenkins/jenkins:lts
+#        envFrom:
+#          - secretRef:
+#              name: docker-secret2
+        env:
+        - name: JAVA_OPTS
+          value: -XX:MinRAMPercentage=50.0 -XX:MaxRAMPercentage=80.0 -Djenkins.install.runSetupWizard=false -Djava.awt.headless=true -Dhudson.model.UpdateCenter.never=true  -Dhudson.PluginManager.CHECK_UPDATE_ATTEMPTS=0
+        - name: JENKINS_HOME
+          value: /var/lib/jenkins
+        imagePullPolicy: Always
+        livenessProbe:
+          failureThreshold: 15
+          httpGet:
+            path: /login
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 180
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 5
+        readinessProbe:
+          failureThreshold: 12
+          httpGet:
+            path: /login
+            port: http
+            scheme: HTTP
+          initialDelaySeconds: 150
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 1
+        resources:
+          limits:
+            cpu: 1500m
+            memory: 4Gi
+          requests:
+            cpu: "1"
+            memory: 500Mi
+  service:
+    type: NodePort # service type NodePort
+    port: 8080
+    nodePort: 30808
+  seedJobs:
+    - id: jenkins-operator
+      targets: "cicd/jobs/*.jenkins"
+      description: "Jenkins Operator repository"
+      repositoryBranch: main
+      repositoryUrl: https://github.com/dmi3x3/app_web.git
