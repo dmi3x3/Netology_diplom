@@ -68,10 +68,10 @@ spec:
           - "--enable-diff-markdown-format"
         env:
         - name: ATLANTIS_REPO_ALLOWLIST
-          value: gitlab.com/dmi3x3/Netology_diplom
+          value: github.com/dmi3x3/netology_diplom
         ### GitHub Config ###
         - name: ATLANTIS_GH_USER
-          value: dmi3x3 # 3i. If you're using GitHub replace <YOUR_GITHUB_USER> with the username of your Atlantis GitHub user without the `@`.
+          value: dmi3x3 #  If you're using GitHub replace <YOUR_GITHUB_USER> with the username of your Atlantis GitHub user without the `@`.
         - name: ATLANTIS_GH_TOKEN
           valueFrom:
             secretKeyRef:
@@ -83,20 +83,6 @@ spec:
               name: atlantis-vcs
               key: webhook-secret
         ### End GitHub Config ###
-        ### Gitlab Config ###
-        - name: ATLANTIS_GITLAB_USER
-          value: dmi3x3
-        - name: ATLANTIS_GITLAB_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: atlantis-vcs
-              key: token
-        - name: ATLANTIS_GITLAB_WEBHOOK_SECRET
-          valueFrom:
-            secretKeyRef:
-              name: atlantis-vcs
-              key: webhook-secret
-        ### End Gitlab Config ###
         - name: ATLANTIS_DATA_DIR
           value: /atlantis
         - name: ATLANTIS_PORT

@@ -14,8 +14,8 @@ resource "local_file" "atlantis" {
 
 resource "null_resource" "atlantis_configmap" {
   provisioner "local-exec" {
-#    command = "kubectl create configmap atlantis-files --from-file=ssh=$HOME/.ssh/id_rsa --from-file=ssh-pub=$HOME/.ssh/id_rsa.pub --from-file=key-json=key.json --from-file=server-config=server.yaml --from-file=auto-tfvars=.auto.tfvars --from-file=terraformrc=.terraformrc"
-    command = "kubectl create configmap atlantis-files --from-file=key-json=key.json --from-file=server-config=server.yaml --from-file=auto-tfvars=.auto.tfvars --from-file=terraformrc=.terraformrc"
+    command = "kubectl create configmap atlantis-files --from-file=ssh=$HOME/.ssh/id_ed25519_atlant --from-file=ssh-pub=$HOME/.ssh/id_ed25519_atlant.pub --from-file=key-json=key.json --from-file=server-config=server.yaml --from-file=auto-tfvars=.auto.tfvars --from-file=terraformrc=.terraformrc"
+#    command = "kubectl create configmap atlantis-files --from-file=key-json=key.json --from-file=server-config=server.yaml --from-file=auto-tfvars=.auto.tfvars --from-file=terraformrc=.terraformrc"
   }
 
   depends_on = [
