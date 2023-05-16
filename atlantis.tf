@@ -38,7 +38,7 @@ resource "null_resource" "atlantis_secret" {
 
 resource "null_resource" "atlantis_apply" {
   provisioner "local-exec" {
-    command = "kubectl apply -f ./atlantis/"
+    command = "kubectl apply -f ./atlantis/ -n atlantis"
   }
 
 
