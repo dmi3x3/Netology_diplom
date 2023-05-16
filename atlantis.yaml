@@ -1,15 +1,15 @@
 version: 3
 projects:
-  - dir: .
-    workspace: stage
-    autoplan:
-      when_modified: ["modules/**/*.tf", "*.tf"]
-    workflow: custom
-  - dir: .
-    workspace: prod
-    autoplan:
-      when_modified: ["modules/**/*.tf", "*.tf"]
-    workflow: custom
+- dir: .
+  workspace: stage
+  autoplan:
+    when_modified: ["modules/**/*.tf", "*.tf"]
+  workflow: custom
+- dir: .
+  workspace: prod
+  autoplan:
+    when_modified: ["modules/**/*.tf", "*.tf"]
+  workflow: custom
 workflows:
   custom:
     plan:
