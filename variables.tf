@@ -60,5 +60,5 @@ variable "gh_token" {
 
 variable "rev_request" {
   type = string
-  default = 1
+  default = 3
 }
