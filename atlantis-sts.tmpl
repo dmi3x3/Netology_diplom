@@ -37,11 +37,11 @@ spec:
         - name: atlantis-home
           mountPath: /home/atlantis
         - name: ssh
-          mountPath: /home/atlantis_temp/.ssh/id_rsa
-          subPath: id_rsa
+          mountPath: /home/atlantis_temp/.ssh/id_ed25519
+          subPath: id_ed25519
         - name: ssh-pub
-          mountPath: /home/atlantis_temp/.ssh/id_rsa.pub
-          subPath: id_rsa.pub
+          mountPath: /home/atlantis_temp/.ssh/id_ed25519.pub
+          subPath: id_ed25519.pub
         - name: terraformrc
           mountPath: /home/atlantis_temp/.terraformrc
           subPath: .terraformrc
@@ -66,6 +66,7 @@ spec:
           - "--tf-download-url=https://terraform-mirror.yandexcloud.net/"
           - "--repo-config=/home/atlantis/server.yaml"
           - "--enable-diff-markdown-format"
+          - "--allow-fork-prs"
         env:
         - name: ATLANTIS_REPO_ALLOWLIST
           value: github.com/dmi3x3/netology_diplom
