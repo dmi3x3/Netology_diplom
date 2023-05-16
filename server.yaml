@@ -1,5 +1,5 @@
 repos:
-- id: gitlab.com/dmi3x3/netology_diplom
+- id: github.com/dmi3x3/netology_diplom
   branch: /.*/
   allowed_overrides: [apply_requirements, workflow, delete_source_branch_on_merge]
   allow_custom_workflows: true
