@@ -1,0 +1,25 @@
+[all]
+stage-node-0 ansible_host=158.160.50.235 ip=10.10.1.22 etcd_member_name=etcd0 ansible_user=ndiplom
+stage-node-1 ansible_host=158.160.24.34 ip=10.10.2.26  ansible_user=ndiplom
+stage-node-2 ansible_host=84.201.149.145 ip=10.10.3.18  ansible_user=ndiplom
+
+[kube_control_plane]
+stage-node-0
+
+[etcd]
+stage-node-0
+
+[kube_node]
+
+stage-node-1
+stage-node-2
+
+[calico_rr]
+
+[k8s_cluster:children]
+kube_control_plane
+kube_node
+calico_rr
+
+[kube_control_plane:vars]
+supplementary_addresses_in_ssl_keys = [ "158.160.50.235" ]
