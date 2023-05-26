@@ -83,18 +83,32 @@ resource "null_resource" "helm_install_app-web" {
   provisioner "local-exec" {
     command = <<EOF
       sleep 30
-      helm install app-web-repo ./app_web/app-web-chart --set image_frontend.tag=latest -n stage
+      helm install app-web-repo ./app_web/app-web-chart --set image_frontend.tag=latest -n ${terraform.workspace}
     EOF
   }
   depends_on = [
     null_resource.jenkins-ns
   ]
 }
+
+resource "local_file" "jenkinsserviceaccount" {
+  content = templatefile("./jenkins/serviceaccount4workspace_clusterrole.tmpl",
+    {
+     ter_workspace4jen = "${terraform.workspace}",
+    }
+  )
+  filename = "./jenkins/${terraform.workspace}-serviceaccount4clusterrole.yaml"
+
+  depends_on = [
+    null_resource.helm_install_app-web
+  ]
+}
+
 resource "null_resource" "install_jenkins-crd" {
   provisioner "local-exec" {
     command    = <<EOF
       sleep 30
-      kubectl apply -n jenkins -f https://raw.githubusercontent.com/jenkinsci/kubernetes-operator/master/config/crd/bases/jenkins.io_jenkins.yaml
+      kubectl apply -n jenkins -f ./jenkins/jenkins.io_jenkins.yaml
       kubectl wait --for condition=Established --all CustomResourceDefinition --namespace=jenkins
     EOF
   }
@@ -105,12 +119,12 @@ resource "null_resource" "install_jenkins-crd" {
     command    = <<EOT
       sleep 30
       kubectl create -n jenkins secret generic dockercred --from-file=.dockerconfigjson=$HOME/docker-netology/.config.json --type=kubernetes.io/dockerconfigjson
-      kubectl apply -f ./jenkins/serviceaccount4stage_clusterrole.yaml
+      kubectl apply -n jenkins -f ./jenkins/${terraform.workspace}-serviceaccount4clusterrole.yaml
       kubectl apply -n jenkins -f ./jenkins/jenkins-instance-jen.yaml
     EOT
   }
     depends_on = [
-      null_resource.helm_install_app-web
+      local_file.jenkinsserviceaccount
     ]
 }
 
